@@ -1,0 +1,20 @@
+
+CREATE DATABASE gescon;
+CREATE USER ayudante WITH PASSWORD revision;
+GRANT ALL PRIVILEGES ON DATABASE gescon TO ayudante;
+
+\c gescon;
+
+
+CREATE TABLE IF NOT EXISTS articulo (
+    id SERIAL PRIMARY KEY,
+);
+
+CREATE TABLE IF NOT EXISTS revisor (
+    id SERIAL PRIMARY KEY,
+);
+
+CREATE TABLE IF NOT EXISTS autor (
+    id SERIAL PRIMARY KEY,
+);
+
