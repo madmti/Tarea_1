@@ -41,4 +41,15 @@ INSTRUCCIONES DE EJECUCION:
 
     3. Ejecutar consultas
 
-        
+
+INSTRUCCIONES DETENCION (Docker):
+
+    # Detener Contenedor
+    > sudo docker kill postgresql_gescon
+
+    # Eliminar Contenedor
+    > sudo docker container postgresql_gescon
+
+    # Eliminar Imagen
+    > sudo docker image postgresql_gescon_image
+
