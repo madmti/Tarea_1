@@ -11,13 +11,13 @@ ALTER USER ayudante WITH SUPERUSER;
 -- Tabla de Topicos/Especialidades
 CREATE TABLE IF NOT EXISTS top_esp (
     id SERIAL PRIMARY KEY,
-    nombre TEXT NOT NULL
+    nombre VARCHAR(85) NOT NULL
 );
 
 -- Tabla de Articulos
 CREATE TABLE IF NOT EXISTS articulo (
     id SERIAL PRIMARY KEY,
-    titulo TEXT NOT NULL,
+    titulo VARCHAR(50) NOT NULL,
     resumen VARCHAR(150) NOT NULL,
     fecha_publicacion DATE NOT NULL,
     topicos INTEGER[] REFERENCES top_esp(id)
@@ -27,9 +27,9 @@ CREATE TABLE IF NOT EXISTS articulo (
 -- Tabla de Revisores
 CREATE TABLE IF NOT EXISTS revisor (
     id SERIAL PRIMARY KEY,
-    rut VARCHAR(10) UNIQUE NOT NULL,
-    nombre TEXT NOT NULL,
-    email TEXT UNIQUE NOT NULL,
+    rut CHAR(10) UNIQUE NOT NULL,
+    nombre VARCHAR(85) NOT NULL,
+    email VARCHAR(95) UNIQUE NOT NULL,
     especialidades INTEGER[] REFERENCES top_esp(id)
     CONSTRAINT especialidades_min CHECK (array_length(especialidades, 1) >= 1)
 );
@@ -37,9 +37,9 @@ CREATE TABLE IF NOT EXISTS revisor (
 -- Tabla de Autores
 CREATE TABLE IF NOT EXISTS autor (
     id SERIAL PRIMARY KEY,
-    rut VARCHAR(10) UNIQUE NOT NULL,
-    nombre TEXT NOT NULL,
-    email TEXT UNIQUE NOT NULL
+    rut CHAR(10) UNIQUE NOT NULL,
+    nombre VARCHAR(85) NOT NULL,
+    email VARCHAR(95) UNIQUE NOT NULL
 );
 
 -- Tabla de Revisiones RELACIONA(Articulo y Revisor)
