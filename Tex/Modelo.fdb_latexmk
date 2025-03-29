@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1743191681.23108 "/home/madmti/Escritorio/Uni/BBDD/Tareas/Tarea_1/Tex/Modelo.tex" "Modelo.pdf" "Modelo" 1743191681.78177 0
-  "/home/madmti/Escritorio/Uni/BBDD/Tareas/Tarea_1/Tex/Modelo.tex" 1743191681.05642 3200 7ba35a692af1a0fdebf9d1bfa4a19d51 ""
+["pdflatex"] 1743217083.29116 "/home/madmti/Escritorio/Uni/BBDD/Tareas/Tarea_1/Tex/Modelo.tex" "Modelo.pdf" "Modelo" 1743217083.83128 0
+  "/home/madmti/Escritorio/Uni/BBDD/Tareas/Tarea_1/Tex/Modelo.tex" 1743217083.09918 4170 1e2293548255ce6fcf25ae052343de93 ""
   "/usr/share/texmf-dist/fonts/map/fontname/texfonts.map" 1742685315 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm" 1742685315 1328 c834bbb027764024c09d3d2bf908b5f0 ""
   "/usr/share/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1742685315 1324 c910af8c371558dc20f2d7822f66fe64 ""
@@ -117,8 +117,8 @@
   "/usr/share/texmf-dist/web2c/texmf.cnf" 1742685315 42087 b0f9697c952c8f5a8eede4134282cb0d ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1742848172 5311557 9da84c45f5b388655502706482323571 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1742848132 2008245 037cfc729047363bd2a0adc4fd986610 ""
-  "Modelo.aux" 1743191681.67706 454 70b502293d5059850872c916f1c115bf "pdflatex"
-  "Modelo.tex" 1743191681.05642 3200 7ba35a692af1a0fdebf9d1bfa4a19d51 ""
+  "Modelo.aux" 1743217083.77891 454 70b502293d5059850872c916f1c115bf "pdflatex"
+  "Modelo.tex" 1743217083.09918 4170 1e2293548255ce6fcf25ae052343de93 ""
   (generated)
   "Modelo.aux"
   "Modelo.log"

@@ -1,0 +1,13 @@
+services:
+  db:
+    image: postgres:17.4
+    container_name: postgresql_gescon
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./Migrations:/docker-entrypoint-initdb.d
+      - ./Scripts:/scripts

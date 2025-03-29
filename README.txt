@@ -11,24 +11,19 @@ INSTRUCCIONES DE EJECUCION:
 
     1. Levantar la base de datos POSTGRESQL: (2 Opciones)
 
-        - Opcion (PostgreSQL Local):
+        - Opcion "Docker": (Recomendada)
+
+            # Construir imagen e Iniciar contenedor
+            > sudo docker-compose up -d
+
+        - Opcion "PostgreSQL Local":
             
             # Crear base de datos
-            > sudo -u postgres psql -f Migrations/CREATE.sql
+            > sudo -u postgres psql -f Migrations/initdb.sql
 
-            # Conectarse a la base de datos
-            > POSTGRES_PASSWORD="revision" psql -U ayudante -d gescon
+            !Opcion sin sudo
+            > psql -U postgres -f Migrations/initdb.sql
 
-        - Opcion (Docker):
-
-            # Construir la imagen
-            > sudo docker build -t postgresql_gescon_image .
-
-            # Iniciar el contenedor
-            > sudo docker run --name postgresql_gescon -d postgresql_gescon_image
-
-            # Conectarse a POSTGRESQL
-            > sudo docker exec -e POSTGRES_PASSWORD="revision" -it postgresql_gescon psql -U ayudante -d gescon
 
     2. Poblar base de datos:
     
@@ -39,17 +34,20 @@ INSTRUCCIONES DE EJECUCION:
         # Ejecutar el script de python
         > python -u ./Scripts/INSERT.py
 
-    3. Ejecutar consultas
+
+    3. Conectar con POSTGRESQL
+
+        - Opcion "Docker": (Recomendada)
+
+            # Conectarse a POSTGRESQL
+            > sudo docker exec -e POSTGRES_PASSWORD="revision" -it postgresql_gescon psql -U ayudante -d gescon
+
+        - Opcion "PostgreSQL Local":
+
+            # Conectarse a la base de datos
+            > POSTGRES_PASSWORD="revision" psql -U ayudante -d gescon
 
 
-INSTRUCCIONES DETENCION (Docker):
+PRECAUCIONES AL USAR WINDOWS:
 
-    # Detener Contenedor
-    > sudo docker kill postgresql_gescon
-
-    # Eliminar Contenedor
-    > sudo docker container postgresql_gescon
-
-    # Eliminar Imagen
-    > sudo docker image postgresql_gescon_image
-
+    - Si "sudo" no esta configurado, ejecute los comandos sin "sudo"
