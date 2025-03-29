@@ -8,51 +8,61 @@ GRANT ALL PRIVILEGES ON DATABASE gescon TO ayudante;
 ALTER DATABASE gescon OWNER TO ayudante;
 ALTER USER ayudante WITH SUPERUSER;
 
--- Tabla de Topicos/Especialidades
-CREATE TABLE IF NOT EXISTS top_esp (
-    id SERIAL PRIMARY KEY,
+-- Tabla de Categorias
+CREATE TABLE IF NOT EXISTS categoria (
+    id_categoria SERIAL PRIMARY KEY,
     nombre VARCHAR(85) NOT NULL
 );
 
 -- Tabla de Articulos
 CREATE TABLE IF NOT EXISTS articulo (
-    id SERIAL PRIMARY KEY,
+    id_articulo SERIAL PRIMARY KEY,
     titulo VARCHAR(50) NOT NULL,
     resumen VARCHAR(150) NOT NULL,
-    fecha_publicacion DATE NOT NULL,
-    topicos INTEGER[] REFERENCES top_esp(id)
-    CONSTRAINT topicos_min CHECK (array_length(topicos, 1) >= 1)
+    fecha_envio DATE NOT NULL
 );
 
--- Tabla de Revisores
-CREATE TABLE IF NOT EXISTS revisor (
-    id SERIAL PRIMARY KEY,
-    rut CHAR(10) UNIQUE NOT NULL,
-    nombre VARCHAR(85) NOT NULL,
-    email VARCHAR(95) UNIQUE NOT NULL,
-    especialidades INTEGER[] REFERENCES top_esp(id)
-    CONSTRAINT especialidades_min CHECK (array_length(especialidades, 1) >= 1)
+-- Tabla Topico (relaciona Artículo y Categoria)
+CREATE TABLE IF NOT EXISTS topico (
+    id_categoria INTEGER REFERENCES categoria(id_categoria),
+    id_articulo INTEGER REFERENCES articulo(id_articulo),
+    PRIMARY KEY (id_categoria, id_articulo)
 );
 
--- Tabla de Autores
+-- Tabla de Autores 
 CREATE TABLE IF NOT EXISTS autor (
-    id SERIAL PRIMARY KEY,
+    id_autor SERIAL PRIMARY KEY,
     rut CHAR(10) UNIQUE NOT NULL,
     nombre VARCHAR(85) NOT NULL,
     email VARCHAR(95) UNIQUE NOT NULL
 );
 
--- Tabla de Revisiones RELACIONA(Articulo y Revisor)
-CREATE TABLE IF NOT EXISTS revision (
-    id SERIAL PRIMARY KEY,
-    id_articulo INTEGER REFERENCES articulo(id),
-    id_revisor INTEGER REFERENCES revisor(id)
+-- Tabla Propiedad (relaciona Autor y Artículo)
+CREATE TABLE IF NOT EXISTS propiedad (
+    id_articulo INTEGER REFERENCES articulo(id_articulo),
+    id_autor INTEGER REFERENCES autor(id_autor),
+    es_contacto BOOLEAN NOT NULL,
+    PRIMARY KEY (id_articulo, id_autor)
 );
 
--- Tabla de Propiedad RELACIONA(Articulo y Autor)
-CREATE TABLE IF NOT EXISTS propiedad (
-    id SERIAL PRIMARY KEY,
-    id_articulo INTEGER REFERENCES articulo(id),
-    id_autor INTEGER REFERENCES autor(id),
-    es_contacto BOOLEAN NOT NULL
+-- Tabla de Revisores
+CREATE TABLE IF NOT EXISTS revisor (
+    id_revisor SERIAL PRIMARY KEY,
+    rut CHAR(10) UNIQUE NOT NULL,
+    nombre VARCHAR(85) NOT NULL,
+    email VARCHAR(95) UNIQUE NOT NULL
+);
+
+-- Tabla de especialidad (Relaciona Revisor y Categoria)
+CREATE TABLE IF NOT EXISTS especialidad (
+    id_categoria INTEGER REFERENCES categoria(id_categoria),
+    id_revisor INTEGER REFERENCES revisor(id_revisor),
+    PRIMARY KEY (id_categoria, id_revisor)
+);
+
+-- Tabla de Revisiones (Relaciona Articulo y Revisor)
+CREATE TABLE IF NOT EXISTS revision (
+    id_articulo INTEGER REFERENCES articulo(id_articulo),
+    id_revisor INTEGER REFERENCES revisor(id_revisor),
+    PRIMARY KEY (id_articulo, id_revisor)
 );
