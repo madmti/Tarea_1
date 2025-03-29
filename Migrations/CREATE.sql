@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS autor (
 CREATE TABLE IF NOT EXISTS propiedad (
     id_articulo INTEGER REFERENCES articulo(id_articulo),
     id_autor INTEGER REFERENCES autor(id_autor),
-    es_contacto BOOLEAN NOT NULL,
+    es_contacto INTEGER NOT NULL,
     PRIMARY KEY (id_articulo, id_autor)
 );
 
