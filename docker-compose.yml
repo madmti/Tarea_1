@@ -6,8 +6,9 @@ services:
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: admin
+      POSTGRES_DB: gescon
     ports:
       - "5432:5432"
     volumes:
       - ./Migrations:/docker-entrypoint-initdb.d
-      - ./Scripts:/scripts
+      - ./CONSULTAS.sql:/CONSULTAS.sql

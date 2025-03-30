@@ -1,5 +1,4 @@
 -- Crear base de datos y Conectarse
-CREATE DATABASE gescon;
 \c gescon;
 
 -- Usuario para Ayudante
@@ -7,6 +6,7 @@ CREATE USER ayudante WITH ENCRYPTED PASSWORD 'revision';
 GRANT ALL PRIVILEGES ON DATABASE gescon TO ayudante;
 ALTER DATABASE gescon OWNER TO ayudante;
 ALTER USER ayudante WITH SUPERUSER;
+
 
 -- Tabla de Categorias
 CREATE TABLE IF NOT EXISTS categoria (
