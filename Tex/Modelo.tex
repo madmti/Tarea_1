@@ -50,10 +50,10 @@ Antes de realizar el modelo de la base de datos, analizaremos las entidades y re
 \end{class}
 
 \draw [thick,-{Triangle}{Triangle}] (Articulo) --++ (Revisor) node[midway, rotate=-32, above] {$\rightarrow$ Es asignado a 3 $\rightarrow$};
-\draw [thick,-{Triangle}{Triangle}] (Revisor) --++ (Articulo) node[midway, rotate=-32, below] {$\leftarrow$ Es asignado a 1 o mas $\leftarrow$};
+\draw [thick, arrows = {-Circle[open]Triangle[]Triangle}] (Revisor) --++ (Articulo) node[midway, rotate=-32, below] {$\leftarrow$ Es asignado a 0 o mas $\leftarrow$};
 
 \draw [thick,-{Triangle}{Triangle}] (Articulo) --++ (Autor) node[midway, above] {$\rightarrow$ Tiene 1 o mas $\rightarrow$};
-\draw [thick,-{Triangle}{Triangle}] (Autor) --++ (Articulo) node[midway, below] {$\leftarrow$ Escribe 1 o mas $\leftarrow$};
+\draw [thick, arrows = {-Circle[open]Triangle[]Triangle}] (Autor) --++ (Articulo) node[midway, below] {$\leftarrow$ Dueño de 0 o mas $\leftarrow$};
 
 \draw [thick,-{Triangle}{Triangle}] (Revisor) --++ (Topico/Especialidad) node[midway, above] {$\rightarrow$ De 1 o mas $\rightarrow$};
 \draw [thick,-{Triangle}{Triangle}] (Topico/Especialidad) --++ (Revisor) node[midway, below] {$\leftarrow$ Se especializa en 1 o mas $\leftarrow$};
@@ -121,14 +121,14 @@ Ahora podemos llevar el modelo general de la situacion a un modelo de base de da
     \draw [thick,-{Triangle}{Triangle}] (Articulo) --++ (Revision) node[midway, rotate=90, above] {Valida a un $\rightarrow$};
     \draw [thick, -{Triangle}] (Revision) --++ (Articulo) node[midway, rotate=-90, above] {Debe pasar tres $\rightarrow$};
 
-    \draw [thick,-{Triangle}{Triangle}] (Revisor) --++ (Revision) node[midway, rotate=-90, above] {Realizada por un $\rightarrow$};
-    \draw [thick, -{Triangle}] (Revision) --++ (Revisor) node[midway, rotate=90, above] {Realiza 1 o mas $\rightarrow$};
+    \draw [thick, arrows = {-Circle[open]Triangle[]Triangle}] (Revisor) --++ (Revision) node[midway, rotate=-90, above] {Realizada por un $\rightarrow$};
+    \draw [thick, -{Triangle}] (Revision) --++ (Revisor) node[midway, rotate=90, above] {Realiza 0 o mas $\rightarrow$};
 
     \draw [thick,-{Triangle}{Triangle}] (Articulo) --++ (Propiedad) node[midway, rotate=90, above] {Es parte de 1 o mas $\rightarrow$};
     \draw [thick, -{Triangle}] (Propiedad) --++ (Articulo) node[midway, rotate=-90, above] {Impuesta sobre un $\rightarrow$};
 
-    \draw [thick,-{Triangle}{Triangle}] (Autor) --++ (Propiedad) node[midway, above] {Impuesta por un $\rightarrow$};
-    \draw [thick, -{Triangle}] (Propiedad) --++ (Autor) node[midway, below] {$\leftarrow$ Tiene 1 o mas};
+    \draw [thick, arrows = {-Circle[open]Triangle[]Triangle}] (Autor) --++ (Propiedad) node[midway, above] {Impuesta por un $\rightarrow$};
+    \draw [thick, -{Triangle}] (Propiedad) --++ (Autor) node[midway, below] {$\leftarrow$ Tiene 0 o mas};
 
     \draw [thick,-{Triangle}{Triangle}] (Revisor) --++ (Especialidad) node[midway, above] {Tiene 1 o mas $\rightarrow$};
     \draw [thick, -{Triangle}] (Especialidad) --++ (Revisor) node[midway, below] {$\leftarrow$ De 1};

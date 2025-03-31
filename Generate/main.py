@@ -66,6 +66,10 @@ class TableData(TypedDict):
             values=[id_articulo, id_autor, str(es_contacto).lower()]
         )
     
+    @staticmethod
+    def to_dict(table:'TableData') -> dict:
+        return { table['columns'][i]: table['values'][i] for i in range(len(table['columns'])) }
+    
 
 class DataGenerator:
     def __init__(self, db_name="gescon", n_articulos=100, n_revisores=50, n_autores=50) -> None:
@@ -74,6 +78,17 @@ class DataGenerator:
         self.n_autores = n_autores
         self.n_categorias = len(CATEGORIAS)
         self.__db_name = db_name
+        self.__generate_order = [
+            self.__generate_categorias,
+            self.__generate_articulos,
+            self.__generate_revisores,
+            self.__generate_autores,
+            self.__generate_relaciones_especialidad,
+            self.__generate_relaciones_topico,
+            self.__generate_relaciones_propiedad,
+            self.__generate_relaciones_revision,
+        ]
+        self.__data = {}
 
     def __convert_to_psql_insert(self, data:TableData) -> str:
         return f"INSERT INTO {data['table']} ({', '.join(data['columns'])}) VALUES ({', '.join(map(str, data['values']))});"
@@ -116,10 +131,24 @@ class DataGenerator:
     def __generate_relaciones_revision(self) -> list[TableData]:
         relaciones = []
         for articulo in range(self.n_articulos):
-            num_revisores = random.randint(1, 3)
-            revisores = random.sample(range(self.n_revisores), num_revisores)
-            for revisor in revisores:
-                relaciones.append(TableData.revision(articulo, revisor))
+            topicos_articulo = [
+                TableData.to_dict(relacion)['id_categoria']
+                for relacion in self.__data['topico']
+                if TableData.to_dict(relacion)['id_articulo'] == articulo
+            ]
+
+            revisores_asignados = set()
+            for topico in topicos_articulo:
+                revisores_disponibles = [
+                    TableData.to_dict(relacion)['id_revisor']
+                    for relacion in self.__data['especialidad']
+                    if TableData.to_dict(relacion)['id_categoria'] == topico and TableData.to_dict(relacion)['id_revisor'] not in revisores_asignados
+                ]
+
+                seleccionados = random.sample(revisores_disponibles, min(3, len(revisores_disponibles)))
+                for revisor in seleccionados:
+                    relaciones.append(TableData.revision(articulo, revisor))
+                    revisores_asignados.add(revisor)
         return relaciones
     
     def __generate_relaciones_topico(self) -> list[TableData]:
@@ -142,16 +171,9 @@ class DataGenerator:
         return relaciones
 
     def __generate_data(self) -> list[str]:
-        data = []
-        data.extend(self.__generate_categorias())
-        data.extend(self.__generate_articulos())
-        data.extend(self.__generate_revisores())
-        data.extend(self.__generate_autores())
-        data.extend(self.__generate_relaciones_especialidad())
-        data.extend(self.__generate_relaciones_revision())
-        data.extend(self.__generate_relaciones_topico())
-        data.extend(self.__generate_relaciones_propiedad())
-        return [self.__convert_to_psql_insert(d) for d in data]
+        for gen in self.__generate_order:
+            self.__data[gen.__name__.split('_')[-1]] = gen()
+        return [self.__convert_to_psql_insert(data) for data_list in self.__data.values() for data in data_list]
     
     def __get_path(self, file_name:str) -> str:
         return os.path.join(os.path.dirname(os.path.dirname(__file__)), "Migrations", file_name)

@@ -1,7 +1,7 @@
 -- 1. Obtener los nombres y resumenes de todos los articulos que comiencen con la letra O
-
+SELECT titulo, resumen FROM articulo WHERE titulo LIKE 'O%';
 -- 2. Obtener la cantidad de articulos enviados por cada autor
-
+SELECT aut.nombre, COUNT (*) AS n_articulos FROM propiedad p JOIN autor aut ON aut.id_autor = p.id_autor GROUP BY aut.nombre;
 -- 3. Obtener los titulos de los articulos que tienen mas de un topico asignado
 
 -- 4. Mostrar el titulo del articulo y toda la informacion acerca del autor de contacto
