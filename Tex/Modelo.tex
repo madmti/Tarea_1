@@ -12,7 +12,7 @@
     INF239 - BASES DE DATOS
 }
 \author{
-    Matias Peñaloza 202373037-8 \\
+    Matías Peñaloza 202373037-8 \\
     Hans González 202373020-3
 }
 \date{
@@ -21,245 +21,183 @@
 \maketitle
 
 \section{Modelo}
-\subsection{Entidad-Relación General}
-Antes de realizar el modelo de la base de datos, analizaremos las entidades y relaciones presentes.
-
+Se presenta a continuación el modelo de la base de datos:
 \begin{center}
-\resizebox{0.8\textwidth}{!}{
+\resizebox{1.1\textwidth}{!}{
 \begin{tikzpicture}
-\begin{class}[text width=4cm]{Articulo}{0 ,0}
-    \attribute{TITULO}
-    \attribute{FECHA\_ENVIO}
-    \attribute{RESUMEN}
+
+\begin{class}[text width=4cm]{Categoria}{0, 0}
+    \attribute{id\_categoria}
+    \attribute{nombre}
 \end{class}
 
-\begin{class}[text width=4cm]{Autor}{10 ,0}
-    \attribute{RUT}
-    \attribute{NOMBRE}
-    \attribute{EMAIL}
+\begin{class}[text width=4cm]{Topico}{5, -5}
+    \inherit{Categoria}
+    \attribute{id\_categoria}
+    \attribute{id\_articulo}
 \end{class}
 
-\begin{class}[text width=4cm]{Revisor}{10 ,-6.25}
-    \attribute{RUT}
-    \attribute{NOMBRE}
-    \attribute{EMAIL}
+\begin{class}[text width=4cm]{Especialidad}{-5, -5}
+    \inherit{Categoria}
+    \attribute{id\_categoria}
+    \attribute{id\_revisor}
 \end{class}
 
-\begin{class}[text width=4cm]{Topico/Especialidad}{0 ,-6.55}
-    \attribute{NOMBRE}
+\begin{class}[text width=4cm]{Usuario}{-12, -14.56}
+    \attribute{id\_usuario}
+    \attribute{rut}
+    \attribute{email}
+    \attribute{nombre}
+    \attribute{contrasena}
+    \attribute{tipo}
 \end{class}
 
-\draw [thick,-{Triangle}{Triangle}] (Articulo) --++ (Revisor) node[midway, rotate=-32, above] {$\rightarrow$ Es asignado a 3 $\rightarrow$};
-\draw [thick, arrows = {-Circle[open]Triangle[]Triangle}] (Revisor) --++ (Articulo) node[midway, rotate=-32, below] {$\leftarrow$ Es asignado a 0 o mas $\leftarrow$};
+\begin{class}[text width=4cm]{Autor}{-5, -20}
+    \inherit{Usuario}
+\end{class}
 
-\draw [thick,-{Triangle}{Triangle}] (Articulo) --++ (Autor) node[midway, above] {$\rightarrow$ Tiene 1 o mas $\rightarrow$};
-\draw [thick, arrows = {-Circle[open]Triangle[]Triangle}] (Autor) --++ (Articulo) node[midway, below] {$\leftarrow$ Dueño de 0 o mas $\leftarrow$};
+\begin{class}[text width=4cm]{Administrador}{-5, -15.875}
+    \inherit{Usuario}
+\end{class}
 
-\draw [thick,-{Triangle}{Triangle}] (Revisor) --++ (Topico/Especialidad) node[midway, above] {$\rightarrow$ De 1 o mas $\rightarrow$};
-\draw [thick,-{Triangle}{Triangle}] (Topico/Especialidad) --++ (Revisor) node[midway, below] {$\leftarrow$ Se especializa en 1 o mas $\leftarrow$};
 
-\draw [thick,-{Triangle}{Triangle}] (Articulo) --++ (Topico/Especialidad) node[midway, rotate=-90, above] {$\rightarrow$ Tiene 1 o mas $\rightarrow$};
-\draw [thick,-{Triangle}{Triangle}] (Topico/Especialidad) --++ (Articulo) node[midway, rotate=90, above] {$\leftarrow$ Presente en 1 o mas $\leftarrow$};
+\begin{class}[text width=4cm]{Revisor}{-5, -11.75}
+    \inherit{Usuario}
+\end{class}
+
+\begin{class}[text width=4cm]{Articulo}{15, -10.65}
+    \attribute{id\_articulo}
+    \attribute{titulo}
+    \attribute{resumen}
+    \attribute{fecha\_envio}
+    \attribute{aprobado}
+\end{class}
+
+\begin{class}[text width=4cm]{Revision}{5, -10}
+    \attribute{id\_articulo}
+    \attribute{id\_revisor}
+    \attribute{estado}
+    \attribute{calidad\_tecnica}
+    \attribute{originalidad}
+    \attribute{valoracion\_global}
+    \attribute{fecha\_emision}
+    \attribute{argumentos}
+\end{class}
+
+\begin{class}[text width=4cm]{Propiedad}{5, -19.35}
+    \attribute{id\_articulo}
+    \attribute{id\_autor}
+    \attribute{es\_contacto}
+\end{class}
+
+\association{Autor}{Tiene $\rightarrow$}{1}{Propiedad}{0..*}{$\leftarrow$ De}
+\association{Propiedad}{Impuesta sobre $\rightarrow$}{1..*}{Articulo}{1}{$\leftarrow$ Tiene}
+\association{Revision}{Es asignado a $\rightarrow$}{0..3}{Articulo}{1}{$\leftarrow$ Tiene}
+\association{Revisor}{Es asignado a $\rightarrow$}{1}{Revision}{0..*}{$\leftarrow$ Tiene}
+\association{Revisor}{$\uparrow$ Tiene}{1}{Especialidad}{1..*}{De $\downarrow$}
+\association{Topico}{De $\rightarrow$}{1..*}{Articulo}{1}{$\leftarrow$ Tiene}
 
 \end{tikzpicture}
 }
 \end{center}
 
-\subsection{Modelo BD}
-Ahora podemos llevar el modelo general de la situacion a un modelo de base de datos.
-
-\begin{center}
-\resizebox{0.8\textwidth}{!}{
-\begin{tikzpicture}
-    \begin{class}[text width=4cm]{Articulo}{-1 ,-3.2}
-        \attribute{ID\_ARTICULO}
-        \attribute{TITULO}
-        \attribute{RESUMEN}
-        \attribute{FECHA\_ENVIO}
-    \end{class}
-
-    \begin{class}[text width=4cm]{Propiedad}{-1 ,2.8}
-        \attribute{ID\_ARTICULO}
-        \attribute{ID\_AUTOR}
-        \attribute{ES\_CONTACTO}
-    \end{class}
-
-    \begin{class}[text width=4cm]{Autor}{9 ,3}
-        \attribute{ID\_AUTOR}
-        \attribute{RUT}
-        \attribute{NOMBRE}
-        \attribute{EMAIL}
-    \end{class}
-
-    \begin{class}[text width=4cm]{Revision}{-1 ,-10}
-        \attribute{ID\_ARTICULO}
-        \attribute{ID\_REVISOR}
-    \end{class}
-
-    \begin{class}[text width=4cm]{Revisor}{-1 ,-16}
-        \attribute{ID\_REVISOR}
-        \attribute{RUT}
-        \attribute{NOMBRE}
-        \attribute{EMAIL}
-    \end{class}
-
-    \begin{class}[text width=4cm]{Especialidad}{9 ,-16.4}
-        \attribute{ID\_CATEGORIA}
-        \attribute{ID\_REVISOR}
-    \end{class}
-
-    \begin{class}[text width=4cm]{Topico}{9 ,-3.6}
-        \attribute{ID\_CATEGORIA}
-        \attribute{ID\_ARTICULO}
-    \end{class}
-
-    \begin{class}[text width=4cm]{Categoria}{9 ,-10}
-        \attribute{ID\_CATEGORIA}
-        \attribute{NOMBRE}
-    \end{class}
-
-    \draw [thick,-{Triangle}{Triangle}] (Articulo) --++ (Revision) node[midway, rotate=90, above] {Valida a un $\rightarrow$};
-    \draw [thick, -{Triangle}] (Revision) --++ (Articulo) node[midway, rotate=-90, above] {Debe pasar tres $\rightarrow$};
-
-    \draw [thick, arrows = {-Circle[open]Triangle[]Triangle}] (Revisor) --++ (Revision) node[midway, rotate=-90, above] {Realizada por un $\rightarrow$};
-    \draw [thick, -{Triangle}] (Revision) --++ (Revisor) node[midway, rotate=90, above] {Realiza 0 o mas $\rightarrow$};
-
-    \draw [thick,-{Triangle}{Triangle}] (Articulo) --++ (Propiedad) node[midway, rotate=90, above] {Es parte de 1 o mas $\rightarrow$};
-    \draw [thick, -{Triangle}] (Propiedad) --++ (Articulo) node[midway, rotate=-90, above] {Impuesta sobre un $\rightarrow$};
-
-    \draw [thick, arrows = {-Circle[open]Triangle[]Triangle}] (Autor) --++ (Propiedad) node[midway, above] {Impuesta por un $\rightarrow$};
-    \draw [thick, -{Triangle}] (Propiedad) --++ (Autor) node[midway, below] {$\leftarrow$ Tiene 0 o mas};
-
-    \draw [thick,-{Triangle}{Triangle}] (Revisor) --++ (Especialidad) node[midway, above] {Tiene 1 o mas $\rightarrow$};
-    \draw [thick, -{Triangle}] (Especialidad) --++ (Revisor) node[midway, below] {$\leftarrow$ De 1};
-
-    \draw [thick,-{Triangle}{Triangle}] (Articulo) --++ (Topico) node[midway, above] {Pertenece a 1 o mas $\rightarrow$};
-    \draw [thick, -{Triangle}] (Topico) --++ (Articulo) node[midway, below] {$\leftarrow$ De 1};
-
-    \draw [thick,-{Triangle}{Triangle}] (Categoria) --++ (Topico) node[midway, rotate=90, above] {Mencionada en 1 o mas $\rightarrow$};
-    \draw [thick, -{Triangle}] (Topico) --++ (Categoria) node[midway, rotate=-90, above] {Es 1 $\rightarrow$};
-
-    \draw [thick,-{Triangle}{Triangle}] (Categoria) --++ (Especialidad) node[midway, rotate=-90, above] {Mencionada en 1 o mas $\rightarrow$};
-    \draw [thick, -{Triangle}] (Especialidad) --++ (Categoria) node[midway, rotate=90, above] {Es 1 $\rightarrow$};
-
-\end{tikzpicture}
-}
-\end{center}
-
-
-
+\noindent Para la herencia de Especialidad y Topico sobre Categoria, se utilizaron tablas separadas con FK's, y para la herencia de Revisor, Autor y Administrador sobre Usuario, se utilizó una única tabla con un campo tipo que indica el tipo de usuario.
 
 \section{Diccionario de Datos}
 
 \subsection{Tabla: Categoria}
 \begin{table}[H]
 \centering
-\begin{tabular}{|l|l|l|l|p{6cm}|}
+\begin{tabular}{|l|l|c|c|l|}
 \hline
-\textbf{Atributo} & \textbf{Tipo de Dato} & \textbf{Nullable} & \textbf{Unique} & \textbf{Descripción} \\ \hline
-id\_categoria & SERIAL & NO & YES & Identificador único de la categoría. \\ \hline
-nombre & VARCHAR(85) & NO & NO & Nombre de la categoría. \\ \hline
+\textbf{Columna}      & \textbf{Tipo}       & \textbf{Único} & \textbf{Nullable} & \textbf{Observaciones}              \\ \hline
+id\_categoria         & SERIAL             & Sí             & No                & \textbf{PK}                      \\ \hline
+nombre                & VARCHAR(85)        & No             & No                & Nombre de la categoría              \\ \hline
 \end{tabular}
-\caption{Diccionario de datos de la tabla Categoria}
-\label{tab:categoria}
 \end{table}
 
 \subsection{Tabla: Articulo}
 \begin{table}[H]
 \centering
-\begin{tabular}{|l|l|l|l|p{6cm}|}
+\begin{tabular}{|l|l|c|c|l|}
 \hline
-\textbf{Atributo} & \textbf{Tipo de Dato} & \textbf{Nullable} & \textbf{Unique} & \textbf{Descripción} \\ \hline
-id\_articulo & SERIAL & NO & YES & Identificador único del artículo. \\ \hline
-titulo & VARCHAR(50) & NO & NO & Título del artículo. \\ \hline
-resumen & VARCHAR(150) & NO & NO & Resumen del contenido del artículo. \\ \hline
-fecha\_envio & DATE & NO & NO & Fecha en que se envió el artículo. \\ \hline
+\textbf{Columna}      & \textbf{Tipo}       & \textbf{Único} & \textbf{Nullable} & \textbf{Observaciones}              \\ \hline
+id\_articulo          & SERIAL             & Sí             & No                & \textbf{PK}                      \\ \hline
+titulo                & VARCHAR(50)        & No             & No                & Título del artículo                 \\ \hline
+resumen               & VARCHAR(150)       & No             & No                & Resumen del artículo                \\ \hline
+fecha\_envio          & DATE               & No             & No                & Fecha de envío del artículo         \\ \hline
+aprobado              & BOOLEAN            & No             & Sí                & Estado de aprobación (NULL significa pendiente) \\ \hline
 \end{tabular}
-\caption{Diccionario de datos de la tabla Articulo}
-\label{tab:articulo}
+\end{table}
+
+\subsection{Tabla: Usuario}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|c|c|l|}
+\hline
+\textbf{Columna}      & \textbf{Tipo}       & \textbf{Único} & \textbf{Nullable} & \textbf{Observaciones}              \\ \hline
+id\_usuario           & SERIAL             & Sí             & No                & \textbf{PK}                      \\ \hline
+rut                   & CHAR(10)           & Sí             & No                & Identificador único                 \\ \hline
+email                 & VARCHAR(95)        & Sí             & No                & Correo electrónico único            \\ \hline
+nombre                & VARCHAR(85)        & Sí             & No                & Nombre único del usuario            \\ \hline
+contrasena            & VARCHAR(30)        & No             & No                & Contraseña del usuario              \\ \hline
+tipo                  & CHAR(3)            & No             & No                & Tipo de usuario (AUT, REV, ADM) \\ \hline
+\end{tabular}
 \end{table}
 
 \subsection{Tabla: Topico}
 \begin{table}[H]
 \centering
-\begin{tabular}{|l|l|l|l|p{6cm}|}
+\begin{tabular}{|l|l|c|c|l|}
 \hline
-\textbf{Atributo} & \textbf{Tipo de Dato} & \textbf{Nullable} & \textbf{Unique} & \textbf{Descripción} \\ \hline
-id\_categoria & INTEGER & NO & NO & Identificador de la categoría asociada. \\ \hline
-id\_articulo & INTEGER & NO & NO & Identificador del artículo asociado. \\ \hline
+\textbf{Columna}      & \textbf{Tipo}       & \textbf{Único} & \textbf{Nullable} & \textbf{Observaciones}              \\ \hline
+id\_categoria         & INTEGER            & No             & No                & \textbf{FK} a \texttt{categoria.id\_categoria} \\ \hline
+id\_articulo          & INTEGER            & No             & No                & \textbf{FK} a \texttt{articulo.id\_articulo} \\ \hline
+\multicolumn{5}{|l|}{\textbf{PK:} (id\_categoria, id\_articulo)} \\ \hline
 \end{tabular}
-\caption{Diccionario de datos de la tabla Topico}
-\label{tab:topico}
-\end{table}
-
-\subsection{Tabla: Autor}
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|l|l|l|p{6cm}|}
-\hline
-\textbf{Atributo} & \textbf{Tipo de Dato} & \textbf{Nullable} & \textbf{Unique} & \textbf{Descripción} \\ \hline
-id\_autor & SERIAL & NO & YES & Identificador único del autor. \\ \hline
-rut & CHAR(10) & NO & YES & RUT único del autor. \\ \hline
-nombre & VARCHAR(85) & NO & NO & Nombre completo del autor. \\ \hline
-email & VARCHAR(95) & NO & YES & Correo electrónico único del autor. \\ \hline
-\end{tabular}
-\caption{Diccionario de datos de la tabla Autor}
-\label{tab:autor}
-\end{table}
-
-\subsection{Tabla: Propiedad}
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|l|l|l|p{6cm}|}
-\hline
-\textbf{Atributo} & \textbf{Tipo de Dato} & \textbf{Nullable} & \textbf{Unique} & \textbf{Descripción} \\ \hline
-id\_articulo & INTEGER & NO & NO & Identificador del artículo asociado. \\ \hline
-id\_autor & INTEGER & NO & NO & Identificador del autor asociado. \\ \hline
-es\_contacto & BOOLEAN & NO & NO & Indica si el autor es el contacto principal. \\ \hline
-\end{tabular}
-\caption{Diccionario de datos de la tabla Propiedad}
-\label{tab:propiedad}
-\end{table}
-
-\subsection{Tabla: Revisor}
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|l|l|l|p{6cm}|}
-\hline
-\textbf{Atributo} & \textbf{Tipo de Dato} & \textbf{Nullable} & \textbf{Unique} & \textbf{Descripción} \\ \hline
-id\_revisor & SERIAL & NO & YES & Identificador único del revisor. \\ \hline
-rut & CHAR(10) & NO & YES & RUT único del revisor. \\ \hline
-nombre & VARCHAR(85) & NO & NO & Nombre completo del revisor. \\ \hline
-email & VARCHAR(95) & NO & YES & Correo electrónico único del revisor. \\ \hline
-\end{tabular}
-\caption{Diccionario de datos de la tabla Revisor}
-\label{tab:revisor}
 \end{table}
 
 \subsection{Tabla: Especialidad}
 \begin{table}[H]
 \centering
-\begin{tabular}{|l|l|l|l|p{6cm}|}
+\begin{tabular}{|l|l|c|c|l|}
 \hline
-\textbf{Atributo} & \textbf{Tipo de Dato} & \textbf{Nullable} & \textbf{Unique} & \textbf{Descripción} \\ \hline
-id\_categoria & INTEGER & NO & NO & Identificador de la categoría asociada. \\ \hline
-id\_revisor & INTEGER & NO & NO & Identificador del revisor asociado. \\ \hline
+\textbf{Columna}      & \textbf{Tipo}       & \textbf{Único} & \textbf{Nullable} & \textbf{Observaciones}              \\ \hline
+id\_categoria         & INTEGER            & No             & No                & \textbf{FK} a \texttt{categoria.id\_categoria} \\ \hline
+id\_revisor           & INTEGER            & No             & No                & \textbf{FK} a \texttt{usuario.id\_usuario}   \\ \hline
+\multicolumn{5}{|l|}{\textbf{PK:} (id\_categoria, id\_revisor)} \\ \hline
 \end{tabular}
-\caption{Diccionario de datos de la tabla Especialidad}
-\label{tab:especialidad}
+\end{table}
+
+\subsection{Tabla: Propiedad}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|c|c|l|}
+\hline
+\textbf{Columna}      & \textbf{Tipo}       & \textbf{Único} & \textbf{Nullable} & \textbf{Observaciones}              \\ \hline
+id\_articulo          & INTEGER            & No             & No                & \textbf{FK} a \texttt{articulo.id\_articulo} \\ \hline
+id\_autor             & INTEGER            & No             & No                & \textbf{FK} a \texttt{usuario.id\_usuario}   \\ \hline
+es\_contacto          & BOOLEAN            & No             & No                & Indica si el autor es contacto principal \\ \hline
+\multicolumn{5}{|l|}{\textbf{PK:} (id\_articulo, id\_autor)} \\ \hline
+\end{tabular}
 \end{table}
 
 \subsection{Tabla: Revision}
 \begin{table}[H]
 \centering
-\begin{tabular}{|l|l|l|l|p{6cm}|}
+\begin{tabular}{|l|l|c|c|l|}
 \hline
-\textbf{Atributo} & \textbf{Tipo de Dato} & \textbf{Nullable} & \textbf{Unique} & \textbf{Descripción} \\ \hline
-id\_articulo & INTEGER & NO & NO & Identificador del artículo revisado. \\ \hline
-id\_revisor & INTEGER & NO & NO & Identificador del revisor asociado. \\ \hline
+\textbf{Columna}      & \textbf{Tipo}       & \textbf{Único} & \textbf{Nullable} & \textbf{Observaciones}              \\ \hline
+id\_articulo          & INTEGER            & No             & No                & \textbf{FK} a \texttt{articulo.id\_articulo} \\ \hline
+id\_revisor           & INTEGER            & No             & No                & \textbf{FK} a \texttt{usuario.id\_usuario}   \\ \hline
+estado                & BOOLEAN            & No             & Sí                & Estado de la revisión (NULL significa pendiente)               \\ \hline
+calidad\_tecnica      & INTEGER            & No             & Sí                & Calificación técnica                \\ \hline
+originalidad          & INTEGER            & No             & Sí                & Calificación de originalidad        \\ \hline
+valoracion\_global    & INTEGER            & No             & Sí                & Calificación global                 \\ \hline
+fecha\_emision        & DATE               & No             & Sí                & Fecha de emisión de la revisión     \\ \hline
+argumentos            & JSON               & No             & Sí                & Comentarios variables en JSON          \\ \hline
+\multicolumn{5}{|l|}{\textbf{PK:} (id\_articulo, id\_revisor)} \\ \hline
 \end{tabular}
-\caption{Diccionario de datos de la tabla Revision}
-\label{tab:revision}
 \end{table}
 
 \end{document}
