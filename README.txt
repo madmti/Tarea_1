@@ -46,7 +46,7 @@ INSTRUCCIONES DE EJECUCION:
 
     Opcion "pgAdmin":
         
-        1. Crear base de datos en pgAdmin
+        1. Crear base de datos en pgAdmin con el nombre "gescon"
         2. Ejecutar archivo Migrations/01_CREATE.sql en la shell de pgAdmin
         3. Reemplazar los datos de conexion en Populate/.env
         4. Ejecutar script de poblacion

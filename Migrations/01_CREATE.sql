@@ -1,12 +1,12 @@
 -- Usuario para ayudante
 CREATE USER ayudante WITH ENCRYPTED PASSWORD 'revision';
-GRANT ALL PRIVILEGES ON DATABASE gescon TO ayudante;
-ALTER DATABASE gescon OWNER TO ayudante;
-ALTER USER ayudante WITH SUPERUSER;
+GRANT ALL PRIVILEGES ON DATABASE gescon TO ayudante;--damos permisos
+ALTER DATABASE gescon OWNER TO ayudante;--lo hacemos dueño
+ALTER USER ayudante WITH SUPERUSER;--lo hacemos un superusuario, para que puede hacer lo que quiera
 
 -- Categoría
 CREATE TABLE IF NOT EXISTS categoria (
-    id_categoria SERIAL PRIMARY KEY,
+    id_categoria SERIAL PRIMARY KEY,--crea un numero incremental
     nombre VARCHAR(85) NOT NULL
 );
 
@@ -29,14 +29,14 @@ CREATE TABLE IF NOT EXISTS usuario (
     tipo CHAR(3) NOT NULL CHECK (tipo IN ('AUT', 'REV', 'ADM'))
 );
 
--- Topico (relaciona Artículo y Categoria)
-CREATE TABLE IF NOT EXISTS topico (
+-- Topico (relaciona Artículo y Categoria)   referenciamos al id_categoria de categoria
+CREATE TABLE IF NOT EXISTS topico ( 
     id_categoria INTEGER REFERENCES categoria(id_categoria) ON DELETE CASCADE,      --> Si se elimina una categoria, se eliminan los topicos asociados
     id_articulo INTEGER REFERENCES articulo(id_articulo) ON DELETE CASCADE,         --> Si se elimina un articulo, se eliminan los topicos asociados
     PRIMARY KEY (id_categoria, id_articulo)
 );
 
--- Especialidad (Relaciona Revisor y Categoria)
+-- Especialidad (Relaciona Revisor y Categoria)  
 CREATE TABLE IF NOT EXISTS especialidad (
     id_categoria INTEGER REFERENCES categoria(id_categoria) ON DELETE CASCADE,      --> Si se elimina una categoria, se eliminan las especialidades asociadas
     id_revisor INTEGER REFERENCES usuario(id_usuario) ON DELETE CASCADE,            --> Si se elimina un revisor, se eliminan las especialidades asociadas
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS revision (
     constraint todo_o_nada  --> Asegura que al enviar todos los campos sean ingresados,
         CHECK (             --> y sino se quede en estado pendiente sin completar campos.
             (
-                calidad_tecnica IS NOT NULL 
+                calidad_tecnica IS NOT NULL --verificamos si todos los campos fueron llenados
                 AND originalidad IS NOT NULL 
                 AND valoracion_global IS NOT NULL 
                 AND fecha_emision IS NOT NULL 
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS revision (
             )
             OR
             (
-                calidad_tecnica IS NULL 
+                calidad_tecnica IS NULL  --o si no se lleno ninguno, asi no se dejan campos a medias
                 AND originalidad IS NULL 
                 AND valoracion_global IS NULL 
                 AND fecha_emision IS NULL 
@@ -103,7 +103,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trigger_verificar_revisor_no_autor
+CREATE TRIGGER trigger_verificar_revisor_no_autor  --se activa la funcion antes de insertar o actualizar  una fila, para evitar que el autor de un articulo sea igual al revisor
 BEFORE INSERT OR UPDATE ON revision
 FOR EACH ROW
 EXECUTE FUNCTION verificar_revisor_no_autor();
@@ -113,11 +113,11 @@ EXECUTE FUNCTION verificar_revisor_no_autor();
 CREATE OR REPLACE FUNCTION calcular_aprobado()
 RETURNS TRIGGER AS $$
 DECLARE
-    total_revisiones INTEGER;
+    total_revisiones INTEGER;--se declaran las revisiones
     revisiones_aprobadas INTEGER;
     revisiones_rechazadas INTEGER;
 BEGIN
-    -- Numero total de revisiones
+    -- Numero total de revisiones  // se cuentan cuantas revisiones totales, hay y despues contamos cuantas hay aprobadas y rechazadas
     SELECT COUNT(*) INTO total_revisiones
     FROM revision
     WHERE id_articulo = NEW.id_articulo;

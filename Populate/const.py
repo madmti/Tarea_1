@@ -5,7 +5,7 @@ CATEGORIAS = [
     "Seguridad de la información", "Inteligencia artificial", "Redes y telecomunicaciones", "Sistemas de información", "Operaciones de red",
 ]
 
-DIGITOS_VERIFICADORES = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'K']
+DIGITOS_VERIFICADORES = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'K']#digitos para rut
 
 DOMINIOS = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'live.com', 'icloud.com', 'zoho.com', 'protonmail.com', 'tutanota.com', 'yandex.com']
 
